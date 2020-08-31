@@ -1,0 +1,15 @@
+jobs:
+  - script: >
+      pipelineJob('example-pipeline') {
+        definition {
+          cpsScm {
+              scm {
+                git {
+                    remote { url 'https://github.com/robsonbittencourt/gafanhoto' }
+                    branch '*/master'
+                }
+              }
+              scriptPath 'Jenkinsfile'
+          }
+        }
+      }

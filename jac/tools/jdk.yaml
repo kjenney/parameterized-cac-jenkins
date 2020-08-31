@@ -1,0 +1,15 @@
+tool:
+  jdk:
+    installations:
+      - name: "open-jdk8"
+        properties:
+          - installSource:
+              installers:
+                - adoptOpenJdkInstaller:
+                    id: "jdk8u265-b01"
+      - name: "open-jdk11"
+        properties:
+          - installSource:
+              installers:
+                - adoptOpenJdkInstaller:
+                    id: "jdk-11.0.8+10"
