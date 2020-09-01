@@ -1,15 +1,36 @@
 jobs:
   - script: >
-      pipelineJob('example-pipeline') {
-        definition {
-          cpsScm {
-              scm {
-                git {
-                    remote { url 'https://github.com/robsonbittencourt/gafanhoto' }
-                    branch '*/master'
-                }
+      job('Triggered') {
+        parameters {
+          fileParam('build.properties')
+        }
+        steps {
+          copyArtifacts('Triggeranotherjob')
+          environmentVariables {
+            propertiesFile('build.properties')
+          }
+          shell('echo $AMI_ID;cat build.properties')
+        }
+      }
+  - script: >
+      job('Triggeranotherjob') {
+        wrappers {
+          credentialsBinding {
+            string('PASSWORD','PASSWORD')
+          }
+        }
+        steps {
+          shell('echo AMI_ID=test > build.properties;cat build.properties')
+        }
+        publishers {
+          archiveArtifacts('build.properties')
+          downstreamParameterized {
+            trigger('Triggered') {
+              condition('SUCCESS')
+              parameters {
+                propertiesFile('build.properties', true)
               }
-              scriptPath 'Jenkinsfile'
+            }
           }
         }
       }
