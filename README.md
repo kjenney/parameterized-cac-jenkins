@@ -1,7 +1,15 @@
-# parameterized-iac-jenkins
+# parameterized-cac-jenkins
 
 This repo is an example of using Configuration-as-Code with Docker as well as
-Triggering downstream Jenkins job with parameters
+the following:
+
+- Triggering downstream Jenkins job with parameters
+- Copying dynamic variables between jobs
+
+## Environment variables
+
+Environment variables are kept in `.env` and used to populate an example. Any
+environment variable can be used in this way throughout the configuration.
 
 ```
 docker build -t jenkinsp .
