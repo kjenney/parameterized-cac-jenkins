@@ -1,4 +1,4 @@
-FROM jenkins/jenkins:lts
+FROM jenkins/jenkins:2.249.1-lts-jdk11
 
 ENV CASC_JENKINS_CONFIG=/usr/share/jac
 
