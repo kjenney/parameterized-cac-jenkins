@@ -70,6 +70,9 @@ Build this $JENKINS_URL/job/kubernetes-jobs/job/job1/
 
 ## Running in EKS
 
+Need to follow this guide to be ALB setup correctly:
+https://docs.aws.amazon.com/eks/latest/userguide/alb-ingress.html
+
 ```
 eksctl create cluster jenkins
 eksctl create nodegroup --cluster jenkins
