@@ -5,7 +5,10 @@ the following:
 
 - Triggering downstream Jenkins job with parameters
 - Copying dynamic variables between jobs
-- Configuring Kubernetes cloud
+- Running jobs on Kubernetes pods
+
+Configuration-as-Code is baked into the Docker image so any changes must be reflected by a
+Docker push.
 
 ## Running locally on Docker
 
@@ -27,21 +30,28 @@ docker stop jenkins
 
 ## Running in Minikube
 
-### Stand up the service
-
 ### Environment variables
 
 Environment variables are defined in secrets and then referred to in the deployment config.
 
 Example: `kubectl -n jenkins create secret generic test --from-literal=test=abcd1234`
 
+### Stand up the service
+
 ```
 minikube start
 kubectl create ns jenkins
 kubectl -n jenkins create secret generic test --from-literal=test=abcd1234
-kubectl -n jenkins apply -f kubernetes/jenkins-admin-rbac.yaml
-kubectl -n jenkins apply -f kubernetes/jenkins-service.yaml
-kubectl -n jenkins apply -f kubernetes/jenkins-deployment.yaml
+kubectl -n jenkins apply -f kubernetes/sa.yml
+kubectl -n jenkins apply -f kubernetes/jenkins.yml
+kubectl -n jenkins apply -f kubernetes/service.yml
+```
+
+Verify the status of Jenkins with:
+
+```
+kubectl get all -n jenkins
+kubectl logs jenkins-0 -n jenkins
 ```
 
 ### Get Jenkins endpoint
@@ -49,5 +59,10 @@ kubectl -n jenkins apply -f kubernetes/jenkins-deployment.yaml
 ```
 MINIKUBE_IP=$(minikube ip)
 NODEPORT=$(kubectl -n jenkins get svc | tail -n 1 | awk -F ':' '{print $2}' | awk -F '/' '{print $1}')
-echo "Go here for Jenkins: http://$MINIKUBE_IP:$NODEPORT"
+JENKINS_URL="http://$MINIKUBE_IP:$NODEPORT"
+echo "Go here for Jenkins: $JENKINS_URL"
 ```
+
+### Got to Jenkins and Run Job
+
+Build this $JENKINS_URL/job/kubernetes-jobs/job/job1/

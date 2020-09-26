@@ -18,6 +18,7 @@ envinject:2.3.0
 git-client:3.4.2
 git-server:1.9
 git:4.4.1
+github:1.31.0
 gradle:1.36
 greenballs:1.15
 h2-api:1.4.199

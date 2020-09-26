@@ -1,4 +1,4 @@
-FROM jenkins/jenkins:2.249.1-lts-jdk11
+FROM jenkins/jenkins:2.249.1-lts-alpine
 
 ENV CASC_JENKINS_CONFIG=/usr/share/jac
 
@@ -11,5 +11,3 @@ RUN mkdir $CASC_JENKINS_CONFIG
 COPY jac/ $CASC_JENKINS_CONFIG
 
 USER jenkins
-
-ENV JAVA_OPTS=-Djenkins.install.runSetupWizard=false

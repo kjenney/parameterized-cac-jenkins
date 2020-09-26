@@ -9,6 +9,8 @@ jenkins:
           password: admin
 
 unclassified:
+  location:
+    url: http://jenkins/
   simple-theme-plugin:
     elements:
       - cssText:

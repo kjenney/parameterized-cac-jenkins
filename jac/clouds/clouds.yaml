@@ -1,14 +1,33 @@
 jenkins:
   clouds:
     - kubernetes:
-        name: kubernetes
+        name: "k8s-agents"
+        namespace: "jenkins"
+        jenkinsUrl: "http://jenkins/"
+        connectTimeout: 0
+        readTimeout: 0
         containerCapStr: 100
+        maxRequestsPerHostStr: 64
+        retentionTimeout: 5
         templates:
-          - name: maven
-            label: mavenpodtemplate
+          - name: "k8s-agent"
+            namespace: "default"
+            label: "linux-x86_64"
+            nodeUsageMode: EXCLUSIVE
             containers:
-              - name: maven
-                image: maven:3.3.9-jdk-8-alpine
+              - name: "jnlp"
+                image: "jenkinsci/jnlp-slave:latest"
+                alwaysPullImage: true
+                workingDir: "/home/jenkins"
                 ttyEnabled: true
-                command: cat
-                args: ""
+                resourceRequestCpu: "500m"
+                resourceLimitCpu: "1000m"
+                resourceRequestMemory: "1Gi"
+                resourceLimitMemory: "2Gi"
+            volumes:
+              - emptyDirVolume:
+                  memory: false
+                  mountPath: "/tmp"
+            idleMinutes: "1"
+            activeDeadlineSeconds: "120"
+            slaveConnectTimeout: "1000"

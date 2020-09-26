@@ -1,0 +1,21 @@
+jobs:
+  - script: >
+      folder('kubernetes-jobs')
+  - script: >
+      pipelineJob('kubernetes-jobs/job1') {
+        definition {
+          cpsScm {
+            scm {
+              git{
+                remote {
+                  github('kjenney/kubernetes-job1')
+                }
+                branch('master')
+              }
+            }
+          }
+        }
+        triggers {
+          scm('H/15 * * * *')
+        }
+      }
