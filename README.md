@@ -71,6 +71,7 @@ Build this $JENKINS_URL/job/kubernetes-jobs/job/job1/
 ## Running in EKS
 
 ```
+eksctl create cluster jenkins
 eksctl create nodegroup --cluster jenkins
 kubectl create ns jenkins
 kubectl -n jenkins create secret generic test --from-literal=test=abcd1234
