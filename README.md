@@ -66,3 +66,35 @@ echo "Go here for Jenkins: $JENKINS_URL"
 ### Got to Jenkins and Run Job
 
 Build this $JENKINS_URL/job/kubernetes-jobs/job/job1/
+
+
+## Running in EKS
+
+```
+eksctl create nodegroup --cluster jenkins
+kubectl create ns jenkins
+kubectl -n jenkins create secret generic test --from-literal=test=abcd1234
+kubectl -n jenkins apply -f kubernetes/sa.yml
+kubectl -n jenkins apply -f kubernetes/jenkins.yml
+kubectl -n jenkins apply -f kubernetes/service.yml
+kubectl -n jenkins apply -f kubernetes/ingress.yml
+```
+
+Verify the status of Jenkins with:
+
+```
+kubectl get all -n jenkins
+kubectl logs jenkins-0 -n jenkins
+```
+
+### Get Jenkins endpoint
+
+Create ingress and point to that for Jenkins
+
+```
+kubectl get ingress/jenkins-ingress -n jenkins
+```
+
+### Got to Jenkins and Run Job
+
+Build this $JENKINS_URL/job/kubernetes-jobs/job/job1/
