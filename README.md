@@ -1,16 +1,14 @@
 # parameterized-cac-jenkins
 
-This repo is an example of using Configuration-as-Code with Docker as well as
+This repo is an example of using Configuration-as-Code with Jenkins as well as
 the following:
 
 - Triggering downstream Jenkins job with parameters
 - Copying dynamic variables between jobs
-- Running jobs on Kubernetes pods
-
-Configuration-as-Code is baked into the Docker image so any changes must be reflected by a
-Docker push.
 
 ## Running locally on Docker
+
+Configuration-as-Code is mounted onto the Docker container. Reloading the
 
 ### Environment variables
 
@@ -18,8 +16,8 @@ Environment variables are kept in `.env` and used to populate an example. Any
 environment variable can be used in this way throughout the configuration.
 
 ```
-docker build -t jenkins .
-docker run -d --rm --name jenkins -p 8080:8080 -p 50000:50000 --env-file .env jenkins
+docker build -t jenkins -f docker/Dockerfile .
+docker run -d --rm --name jenkins -p 8080:8080 -p 50000:50000 --env-file .env -v "$(pwd)"/jac:/usr/share/jac jenkins
 ```
 
 To cleanup:
@@ -27,6 +25,8 @@ To cleanup:
 ```
 docker stop jenkins
 ```
+
+TODO: How to connect to a Kubernetes cluster from a Docker container
 
 ## Running in Minikube
 
