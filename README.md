@@ -30,35 +30,31 @@ TODO: How to connect to a Kubernetes cluster from a Docker container
 
 ## Running in Minikube
 
-### Environment variables
+### Getting Helm chart
 
-Environment variables are defined in secrets and then referred to in the deployment config.
+```
+helm repo add jenkinsci https://charts.jenkins.io
+```
 
-Example: `kubectl -n jenkins create secret generic test --from-literal=test=abcd1234`
+## Build the values
+
+```
+yq m minikube-values.yaml plugins.yaml > /tmp/minikube.yaml
+```
 
 ### Stand up the service
 
 ```
 minikube start
 kubectl create ns jenkins
-kubectl -n jenkins create secret generic test --from-literal=test=abcd1234
-kubectl -n jenkins apply -f kubernetes/sa.yml
-kubectl -n jenkins apply -f kubernetes/jenkins.yml
-kubectl -n jenkins apply -f kubernetes/service.yml
-```
-
-Verify the status of Jenkins with:
-
-```
-kubectl get all -n jenkins
-kubectl logs jenkins-0 -n jenkins
+helm install -f /tmp/minikube.yaml -n jenkins jenkins jenkinsci/jenkins
 ```
 
 ### Get Jenkins endpoint
 
 ```
 MINIKUBE_IP=$(minikube ip)
-NODEPORT=$(kubectl -n jenkins get svc | tail -n 1 | awk -F ':' '{print $2}' | awk -F '/' '{print $1}')
+NODEPORT=$(kubectl -n jenkins get svc jenkins | tail -n 1 | awk -F ':' '{print $2}' | awk -F '/' '{print $1}')
 JENKINS_URL="http://$MINIKUBE_IP:$NODEPORT"
 echo "Go here for Jenkins: $JENKINS_URL"
 ```
@@ -67,6 +63,11 @@ echo "Go here for Jenkins: $JENKINS_URL"
 
 Build this $JENKINS_URL/job/kubernetes-jobs/job/job1/
 
+To cleanup:
+
+```
+minikube delete
+```
 
 ## Running in EKS
 
